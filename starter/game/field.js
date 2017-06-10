@@ -1,6 +1,9 @@
 /**
  * Created by nbokdam on 18-5-17.
  */
+var Coordinate = require("./coordinate");
+var Promise = require("bluebird");
+
 var field = function (x, y) {
     var matrix = [];
     for (var i = 0; i < y; i++) {
@@ -35,5 +38,29 @@ field.prototype.update = function (field) {
 field.prototype.state = function () {
     return this._field;
 };
+
+field.prototype.getFieldsWithState = function(s, cb) {
+    var coordinates = [];
+    var stack = this._field.map(function(row, y) {
+        return new Promise(function(resolve, reject) {
+            var stack = row.map(function(v, x) {
+                return new Promise(function(resolve, reject) {
+                    if(v===s) {
+                        coordinates.push(new Coordinate(x, y));
+                        resolve();
+                    } else {
+                        resolve();
+                    }
+                })
+            });
+            return Promise.all(stack).then(resolve).catch(reject);
+        });
+    });
+    Promise.all(stack).then(function(){
+        cb(coordinates);
+        return Promise.resolve(coordinates);
+    }).catch(console.error);
+    return coordinates;
+}
 
 module.exports = field;

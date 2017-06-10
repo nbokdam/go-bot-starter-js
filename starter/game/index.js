@@ -50,4 +50,8 @@ game.prototype.state = function () {
     }
 };
 
+game.prototype.fieldsWithState = function(s, cb) {
+    return this._field.getFieldsWithState(s, cb);
+}
+
 module.exports = game;

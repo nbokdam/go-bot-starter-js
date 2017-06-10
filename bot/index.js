@@ -9,6 +9,8 @@
  */
 module.exports = function (time, game, move) {
     //console.error(game.state());
-
-    move(null, null, true);
+    return game.fieldsWithState(0, function(coordinates){
+        var c = coordinates[Math.floor(Math.random()*coordinates.length)].get();
+        move(c.x, c.y);
+    });
 };
